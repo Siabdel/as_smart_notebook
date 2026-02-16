@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Votre Agence — Apps métier & IA (RAG open‑source) sur Django</title>
+  <meta name="description" content="Nous concevons des applications métier et des SaaS Django robustes, et intégrons l’IA (RAG open-source DeepSeek/Qwen) pour automatiser, chercher et décider plus vite — sans sacrifier la qualité." />
+
+  <!-- Bootstrap (rapide pour un MVP de landing) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root { --brand:#0b5ed7; --ink:#0f172a; --muted:#475569; --bg:#0b1220; }
+    body { color: var(--ink); }
+    .hero {
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(11,94,215,.25), transparent 60%),
+                  radial-gradient(1000px 500px at 90% 30%, rgba(99,102,241,.20), transparent 55%),
+                  linear-gradient(180deg, #070b14 0%, #0b1220 100%);
+      color: #eef2ff;
+    }
+    .hero .lead { color: rgba(238,242,255,.85); }
+    .badge-soft { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); }
+    .card-soft { border: 1px solid #e5e7eb; box-shadow: 0 1px 0 rgba(15,23,42,.04); }
+    .section { padding: 72px 0; }
+    .kpi { font-weight: 700; font-size: 1.1rem; }
+    .muted { color: var(--muted); }
+    .btn-primary { background: var(--brand); border-color: var(--brand); }
+    .fine { font-size: .92rem; color: #64748b; }
+    .pill { border:1px solid #e5e7eb; border-radius: 999px; padding:.45rem .75rem; }
+    .anchor { scroll-margin-top: 90px; }
+    .nav-blur { backdrop-filter: blur(10px); background: rgba(255,255,255,.75); }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <nav class="navbar navbar-expand-lg sticky-top nav-blur border-bottom">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">VotreAgence</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto gap-lg-2">
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#ia">IA & RAG</a></li>
+          <li class="nav-item"><a class="nav-link" href="#method">Méthode</a></li>
+          <li class="nav-item"><a class="nav-link" href="#offres">Offres</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary ms-lg-3" href="#contact">Demander un audit</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container section">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <span class="badge badge-soft rounded-pill px-3 py-2">Django / DRF / Celery</span>
+            <span class="badge badge-soft rounded-pill px-3 py-2">Vue.js / Bootstrap</span>
+            <span class="badge badge-soft rounded-pill px-3 py-2">RAG open-source (DeepSeek / Qwen)</span>
+          </div>
+
+          <h1 class="display-5 fw-bold">
+            Des applications métier robustes, accélérées par l’IA.
+          </h1>
+
+          <p class="lead mt-3">
+            Vous avez un process, des données, une équipe. Nous construisons l’app qui industrialise tout ça — et
+            nous y ajoutons l’IA (RAG + agents) pour chercher, assister et automatiser, sans transformer votre SI en boîte noire.
+          </p>
+
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <a class="btn btn-primary btn-lg" href="#contact">Parler de votre projet</a>
+            <a class="btn btn-outline-light btn-lg" href="#offres">Voir les offres</a>
+          </div>
+
+          <p class="fine mt-3 mb-0">
+            Orientation “gagnant‑gagnant” : transparence, transfert de compétences, et décisions techniques expliquées.
+          </p>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="p-4 rounded-4" style="background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);">
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="kpi">Qualité</div>
+                <div class="fine" style="color: rgba(238,242,255,.80);">
+                  Code maintenable, tests, observabilité, sécurité Django.
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="kpi">Expérience</div>
+                <div class="fine" style="color: rgba(238,242,255,.80);">
+                  Architecture SaaS, multi‑tenant, perf PostgreSQL, intégrations API.
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="kpi">Vitesse</div>
+                <div class="fine" style="color: rgba(238,242,255,.80);">
+                  Vibe coding assisté par IA + delivery par sprints, avec validation humaine.
+                </div>
+              </div>
+            </div>
+
+            <hr class="border-light opacity-25 my-4">
+            <div class="fine" style="color: rgba(238,242,255,.80);">
+              Cas d’usage typiques : logistique/TMS, conciergerie, CRM interne, automatisation support, back‑office multi‑sites.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TRUST / STACK -->
+  <section class="section">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <h2 class="fw-bold">Une stack “business-first”, pas un gadget.</h2>
+          <p class="muted mb-0">
+            L’IA est utile quand elle sert un métier : accès fiable aux documents, réduction du temps de traitement, réponses cohérentes,
+            et automatisations vérifiables. Nous privilégions l’open-source quand c’est pertinent et documentons tout.
+          </p>
+        </div>
+        <div class="col-lg-6">
+          <div class="d-flex flex-wrap gap-2 justify-content-lg-end">
+            <span class="pill">PostgreSQL (+ pgvector)</span>
+            <span class="pill">Django Admin “sur-vitaminé”</span>
+            <span class="pill">DRF + OpenAPI</span>
+            <span class="pill">Celery / Redis</span>
+            <span class="pill">Docker / CI</span>
+            <span class="pill">RAG: embeddings + rerank</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section bg-light anchor">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <h2 class="fw-bold">Ce que nous livrons</h2>
+          <p class="muted">
+            Un produit utile, stable, et exploitable par votre équipe. Pas seulement une démo.
+          </p>
+        </div>
+        <div class="col-lg-7">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <h3 class="h5 fw-semibold">Applications métier web</h3>
+                  <p class="muted mb-0">Back-office, workflows, permissions, reporting, intégrations, SSO si besoin.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <h3 class="h5 fw-semibold">SaaS Django</h3>
+                  <p class="muted mb-0">Multi-tenant, facturation, rôles, audit logs, scalabilité, maintenance.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <h3 class="h5 fw-semibold">APIs & intégrations</h3>
+                  <p class="muted mb-0">DRF, webhooks, ETL léger, mapping données, connecteurs outils internes.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <h3 class="h5 fw-semibold">Rescue & modernisation</h3>
+                  <p class="muted mb-0">Reprise projet, dette technique, perf ORM, migrations, mise à niveau Django.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 fine">
+            Livrables systématiques : dépôt Git, documentation d’architecture, environnements dev, plan de tests, guide d’exploitation.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IA / RAG -->
+  <section id="ia" class="section anchor">
+    <div class="container">
+      <div class="row g-4 align-items-start">
+        <div class="col-lg-6">
+          <h2 class="fw-bold">IA utile : RAG open-source + agents</h2>
+          <p class="muted">
+            Votre équipe doit pouvoir poser des questions à ses documents et données internes, et obtenir des réponses traçables
+            (sources, score, logs), avec une gouvernance claire.
+          </p>
+
+          <div class="mt-3 d-grid gap-2">
+            <div class="card card-soft">
+              <div class="card-body">
+                <h3 class="h6 fw-semibold mb-2">RAG (Retrieval-Augmented Generation)</h3>
+                <p class="muted mb-0">
+                  Chat sur vos documents (PDF, procédures, contrats, tickets, emails exportés) avec citations internes,
+                  indexation, permissions, et mise à jour continue.
+                </p>
+              </div>
+            </div>
+            <div class="card card-soft">
+              <div class="card-body">
+                <h3 class="h6 fw-semibold mb-2">Assistants spécialisés</h3>
+                <p class="muted mb-0">
+                  Assistant support, assistant exploitation, assistant commercial : mêmes règles métier, mêmes sources, ton contrôlé.
+                </p>
+              </div>
+            </div>
+            <div class="card card-soft">
+              <div class="card-body">
+                <h3 class="h6 fw-semibold mb-2">Agents (automatisation)</h3>
+                <p class="muted mb-0">
+                  Relance, qualification, génération de brouillons, extraction, validation humaine obligatoire sur étapes critiques.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p class="fine mt-3 mb-0">
+            Modèles possibles : DeepSeek/Qwen en local ou sur serveur dédié ; option hybride via API (OpenRouter) selon contraintes.
+          </p>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="p-4 rounded-4 border">
+            <h3 class="h5 fw-semibold">Exemples concrets</h3>
+            <ul class="mt-3 mb-0">
+              <li class="mb-2">TMS/Logistique : “Explique-moi les retards de la semaine et propose des actions.”</li>
+              <li class="mb-2">CRM : “Résume l’historique client + points de friction + prochaine action.”</li>
+              <li class="mb-2">Conciergerie : “Réponds sur WhatsApp avec les infos exactes du logement + règles internes.”</li>
+              <li class="mb-0">Ops : “Analyse les erreurs Sentry et propose un PR de correction.”</li>
+            </ul>
+            <hr class="my-4">
+            <div class="fine">
+              Notre règle : si une réponse ne peut pas être justifiée par vos sources autorisées, l’assistant doit l’indiquer.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section id="method" class="section bg-light anchor">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <h2 class="fw-bold">Une méthode simple, industrialisée</h2>
+          <p class="muted">
+            On va vite, mais on garde des rails : cadrage, itérations courtes, démos, et décisions réversibles.
+          </p>
+        </div>
+        <div class="col-lg-7">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <div class="kpi">1) Audit & cadrage</div>
+                  <p class="muted mb-0">Objectifs, KPI, risques, données disponibles, opportunités IA, backlog priorisé.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <div class="kpi">2) Prototype (7–10 jours)</div>
+                  <p class="muted mb-0">MVP utilisable, flux principal, première version du RAG si nécessaire.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <div class="kpi">3) Industrialisation</div>
+                  <p class="muted mb-0">Tests, sécurité, perf, permissions, observabilité, CI/CD, docs.</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-soft h-100">
+                <div class="card-body">
+                  <div class="kpi">4) Déploiement & run</div>
+                  <p class="muted mb-0">Formation, conduite du changement, support, roadmap, amélioration continue.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 fine">
+            Option : “mode coop” (gagnant‑gagnant) — on construit avec vous, et on vous rend autonome au maximum.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFERS -->
+  <section id="offres" class="section anchor">
+    <div class="container">
+      <div class="row g-4 align-items-end">
+        <div class="col-lg-6">
+          <h2 class="fw-bold">Offres claires, adaptées à votre maturité</h2>
+          <p class="muted mb-0">
+            Vous pouvez démarrer petit, valider la valeur, puis industrialiser.
+          </p>
+        </div>
+        <div class="col-lg-6 text-lg-end">
+          <a class="btn btn-primary" href="#contact">Obtenir un devis</a>
+        </div>
+      </div>
+
+      <div class="row g-3 mt-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="card card-soft h-100">
+            <div class="card-body">
+              <h3 class="h5 fw-semibold">Diagnostic (5 jours)</h3>
+              <p class="muted">Cadrage + audit opportunités IA + backlog + estimation.</p>
+              <div class="fine">Idéal si vous avez “l’idée” mais pas le plan.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="card card-soft h-100">
+            <div class="card-body">
+              <h3 class="h5 fw-semibold">MVP App métier</h3>
+              <p class="muted">Django/DRF + UI + auth + permissions + démo interne.</p>
+              <div class="fine">4–6 semaines selon périmètre.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="card card-soft h-100">
+            <div class="card-body">
+              <h3 class="h5 fw-semibold">RAG “AI‑Ready”</h3>
+              <p class="muted">Ingestion docs + index + chat + citations + rôles.</p>
+              <div class="fine">On‑prem / cloud / hybride.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="card card-soft h-100">
+            <div class="card-body">
+              <h3 class="h5 fw-semibold">Run & Rescue</h3>
+              <p class="muted">Stabilisation, perf, sécurité, monitoring, roadmap.</p>
+              <div class="fine">Pour projets existants.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="fine mt-3 mb-0">
+        Paiement possible : forfait (livrables définis) ou régie (sprints). Contrat et périmètre posés dès le départ.
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section bg-light">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <h2 class="fw-bold">FAQ</h2>
+          <p class="muted mb-0">Les questions qu’on vous pose (et qu’on aime qu’on nous pose).</p>
+        </div>
+        <div class="col-lg-7">
+          <div class="accordion" id="faq">
+            <div class="accordion-item">
+              <h3 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#q1">
+                  Est-ce que nos données partent chez un fournisseur externe ?
+                </button>
+              </h3>
+              <div id="q1" class="accordion-collapse collapse show" data-bs-parent="#faq">
+                <div class="accordion-body">
+                  Non par défaut : on peut déployer en open-source (DeepSeek/Qwen) sur votre infra. L’option hybride (API) est possible si vous la choisissez.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q2">
+                  Comment évitez-vous les “hallucinations” de l’IA ?
+                </button>
+              </h3>
+              <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faq">
+                <div class="accordion-body">
+                  RAG avec sources autorisées, règles de refus, logs, et validation humaine sur actions sensibles (email, paiement, suppression, décisions contractuelles).
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q3">
+                  On a déjà une app Django : vous pouvez intégrer l’IA sans tout refaire ?
+                </button>
+              </h3>
+              <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faq">
+                <div class="accordion-body">
+                  Oui : on peut ajouter un module RAG, des endpoints DRF, une table d’audit, et brancher l’assistant sur vos permissions existantes.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fine mt-3">
+            Vous avez une contrainte spécifique (sécurité, RGPD, on‑prem, budget GPU) ? On la traite dès le diagnostic.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section anchor">
+    <div class="container">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <h2 class="fw-bold">Parlons de votre app (et de vos données)</h2>
+          <p class="muted mb-0">
+            Décrivez votre métier, vos irritants, et vos sources de données. On vous répond avec une proposition claire : périmètre, délais, et prochain sprint.
+          </p>
+          <div class="mt-4 d-flex flex-wrap gap-2">
+            <span class="pill">Réponse sous 24–48h</span>
+            <span class="pill">NDA possible</span>
+            <span class="pill">Casablanca / Remote</span>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <form class="p-4 rounded-4 border" action="#" method="post">
+            <div class="mb-3">
+              <label class="form-label">Nom / Société</label>
+              <input class="form-control" name="name" placeholder="Ex: Société XYZ" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input class="form-control" type="email" name="email" placeholder="vous@domaine.com" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Votre besoin (2–5 phrases)</label>
+              <textarea class="form-control" name="message" rows="4" placeholder="Ex: back-office logistique + intégration RAG sur procédures + rôle manager/opérateur..." required></textarea>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Envoyer</button>
+            <div class="fine mt-2">Ou contactez-nous : contact@votreagence.com • +212 X XX XX XX XX</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-4 border-top">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div class="fine">© <span id="y"></span> VotreAgence — Apps métier & IA (RAG open-source) sur Django.</div>
+      <div class="fine">
+        <a href="#" class="text-decoration-none me-3">Mentions légales</a>
+        <a href="#" class="text-decoration-none">Confidentialité</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>

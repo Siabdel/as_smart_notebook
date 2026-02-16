@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart-Notebook • Votre IA Documentaire Personnelle</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts - Design distinctif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Vue 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.15/dist/vue.global.prod.js"></script>
+    
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.5/dist/axios.min.js"></script>
+    
+    <style>
+        :root {
+            /* Palette distinctive - Thème brutaliste moderne avec accents vifs */
+            --primary: #0A0E27;
+            --primary-light: #1A1F3A;
+            --accent: #00FF9D;
+            --accent-dark: #00CC7D;
+            --accent-glow: rgba(0, 255, 157, 0.3);
+            --warning: #FFD700;
+            --danger: #FF3E5C;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A8B2D1;
+            --bg-pattern: #0F1428;
+            --card-bg: rgba(26, 31, 58, 0.6);
+            --card-border: rgba(0, 255, 157, 0.2);
+            
+            /* Typographie */
+            --font-display: 'Archivo Black', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Background animé avec grain et pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 157, 0.03) 2px,
+                    rgba(0, 255, 157, 0.03) 4px
+                ),
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 62, 92, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Grain texture overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        #app {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Header Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 120px;
+            height: 6px;
+            background: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        
+        /* Glassmorphic Cards */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 157, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px var(--accent-glow);
+        }
+        
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* Boutons distinctifs */
+        .btn-primary-custom {
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            box-shadow: 0 8px 32px rgba(0, 255, 157, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary-custom::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--accent-dark);
+            transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+        }
+        
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 255, 157, 0.5);
+        }
+        
+        .btn-primary-custom:hover::before {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+        }
+        
+        .btn-primary-custom span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed var(--card-border);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0, 255, 157, 0.02);
+        }
+        
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--accent);
+            background: rgba(0, 255, 157, 0.08);
+            transform: scale(1.02);
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Chat Interface */
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            background: var(--primary-light);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) var(--primary);
+        }
+        
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: var(--primary);
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        
+        .chat-message {
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-user {
+            text-align: right;
+        }
+        
+        .message-bubble {
+            display: inline-block;
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            max-width: 80%;
+            position: relative;
+        }
+        
+        .message-user .message-bubble {
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .message-assistant .message-bubble {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+        }
+        
+        /* Sources citées */
+        .source-card {
+            background: rgba(0, 255, 157, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .source-card:hover {
+            background: rgba(0, 255, 157, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .source-title {
+            font-weight: 700;
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        
+        /* Documents List */
+        .document-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .document-item:hover {
+            border-color: var(--accent);
+            transform: translateX(8px);
+        }
+        
+        .document-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .badge-custom {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .badge-pending {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--warning);
+        }
+        
+        .badge-processing {
+            background: rgba(0, 255, 157, 0.2);
+            color: var(--accent);
+            animation: pulse 2s infinite;
+        }
+        
+        .badge-completed {
+            background: rgba(0, 255, 157, 0.2);
+            color: var(--accent);
+        }
+        
+        .badge-failed {
+            background: rgba(255, 62, 92, 0.2);
+            color: var(--danger);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(0, 255, 157, 0.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Stats Cards */
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--accent);
+            text-shadow: 0 0 30px var(--accent-glow);
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.5rem;
+        }
+        
+        /* Features Grid */
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            color: var(--primary);
+            box-shadow: 0 0 30px var(--accent-glow);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: auto;
+                padding: 4rem 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .chat-container {
+                height: 400px;
+            }
+        }
+        
+        /* Animations d'entrée */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        
+        /* Input focus states */
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.25rem var(--accent-glow);
+            background: var(--primary-light);
+            color: var(--text-primary);
+        }
+        
+        .form-control {
+            background: var(--primary-light);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+        }
+        
+        /* Navbar custom */
+        .navbar-custom {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 0;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent) !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Logo */
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .logo::before {
+            content: '◆';
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+            <div class="container">
+                <a class="logo" href="#">Smart-Notebook</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#upload">Upload</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#chat">Questions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#documents">Documents</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 fade-in stagger-1">
+                        <h1 class="hero-title">
+                            Interrogez vos<br>documents<br>avec l'IA
+                        </h1>
+                        <p class="hero-subtitle">
+                            Uploadez vos PDFs, posez vos questions. Smart-Notebook extrait les réponses 
+                            et cite ses sources grâce à l'IA hybride locale + cloud.
+                        </p>
+                        <button class="btn btn-primary-custom" @click="scrollToUpload">
+                            <span>Commencer maintenant</span>
+                        </button>
+                    </div>
+                    
+                    <div class="col-lg-6 fade-in stagger-2">
+                        <div class="glass-card">
+                            <div class="row">
+                                <div class="col-4 stat-card">
+                                    <div class="stat-number">{{ stats.total_documents }}</div>
+                                    <div class="stat-label">Documents</div>
+                                </div>
+                                <div class="col-4 stat-card">
+                                    <div class="stat-number">{{ stats.total_chunks }}</div>
+                                    <div class="stat-label">Chunks</div>
+                                </div>
+                                <div class="col-4 stat-card">
+                                    <div class="stat-number">{{ formatNumber(stats.total_characters) }}</div>
+                                    <div class="stat-label">Caractères</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-4 fade-in stagger-3">
+                        <div class="glass-card h-100">
+                            <div class="feature-icon">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                            </div>
+                            <h3 class="mb-3">IA Hybride</h3>
+                            <p class="text-secondary">
+                                Embeddings locaux (Ollama) + Génération cloud (Claude 3.5) 
+                                pour un équilibre parfait entre coût et qualité.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 fade-in stagger-4">
+                        <div class="glass-card h-100">
+                            <div class="feature-icon">
+                                <i class="bi bi-search"></i>
+                            </div>
+                            <h3 class="mb-3">Recherche Vectorielle</h3>
+                            <p class="text-secondary">
+                                Powered by pgvector : trouvez les passages pertinents 
+                                instantanément avec la recherche sémantique.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4 fade-in">
+                        <div class="glass-card h-100">
+                            <div class="feature-icon">
+                                <i class="bi bi-book"></i>
+                            </div>
+                            <h3 class="mb-3">Sources Citées</h3>
+                            <p class="text-secondary">
+                                Chaque réponse inclut les sources exactes (document + page) 
+                                pour une transparence totale.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="upload" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5" style="font-family: var(--font-display); font-size: 2.5rem;">
+                    Upload vos documents
+                </h2>
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="glass-card">
+                            <div 
+                                class="upload-zone"
+                                :class="{ dragover: isDragging }"
+                                @click="triggerFileInput"
+                                @dragover.prevent="isDragging = true"
+                                @dragleave.prevent="isDragging = false"
+                                @drop.prevent="handleFileDrop"
+                            >
+                                <div class="upload-icon">
+                                    <i class="bi bi-cloud-upload"></i>
+                                </div>
+                                <h4>Glissez-déposez vos PDFs ici</h4>
+                                <p class="text-secondary mb-0">ou cliquez pour parcourir (50 MB max)</p>
+                                <input 
+                                    type="file" 
+                                    ref="fileInput" 
+                                    @change="handleFileSelect"
+                                    accept=".pdf,.txt"
+                                    style="display: none"
+                                    multiple
+                                >
+                            </div>
+                            
+                            <!-- Upload Progress -->
+                            <div v-if="uploadProgress.length > 0" class="mt-4">
+                                <div v-for="(file, index) in uploadProgress" :key="index" class="mb-3">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>{{ file.name }}</span>
+                                        <span>{{ file.status }}</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div 
+                                            class="progress-bar" 
+                                            :class="file.status === 'Terminé' ? 'bg-success' : 'bg-info'"
+                                            role="progressbar" 
+                                            :style="{ width: file.progress + '%' }"
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5" style="font-family: var(--font-display); font-size: 2.5rem;">
+                    Posez vos questions
+                </h2>
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="glass-card">
+                            <!-- Chat Container -->
+                            <div class="chat-container" ref="chatContainer">
+                                <div v-if="messages.length === 0" class="text-center text-secondary" style="padding: 4rem 0;">
+                                    <i class="bi bi-chat-dots" style="font-size: 4rem; opacity: 0.3;"></i>
+                                    <p class="mt-3">Commencez une conversation avec vos documents...</p>
+                                </div>
+                                
+                                <div v-for="(message, index) in messages" :key="index" class="chat-message" :class="message.role === 'user' ? 'message-user' : 'message-assistant'">
+                                    <div class="message-bubble">
+                                        <div v-html="message.content"></div>
+                                        
+                                        <!-- Sources -->
+                                        <div v-if="message.sources && message.sources.length > 0" class="mt-3">
+                                            <strong style="font-family: var(--font-mono); font-size: 0.85rem;">Sources citées :</strong>
+                                            <div v-for="(source, idx) in message.sources" :key="idx" class="source-card">
+                                                <div class="source-title">{{ source.document_title }}</div>
+                                                <div class="text-secondary" style="font-size: 0.85rem;">
+                                                    Page {{ source.page || 'N/A' }} • Pertinence: {{ (source.relevance_score * 100).toFixed(0) }}%
+                                                </div>
+                                                <div class="mt-2" style="font-size: 0.9rem; font-style: italic;">
+                                                    "{{ source.excerpt }}"
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div v-if="isLoadingAnswer" class="chat-message message-assistant">
+                                    <div class="message-bubble">
+                                        <div class="d-flex align-items-center">
+                                            <div class="spinner me-3"></div>
+                                            <span>Recherche dans les documents...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Input -->
+                            <div class="d-flex gap-2">
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    v-model="currentQuestion"
+                                    @keyup.enter="askQuestion"
+                                    placeholder="Posez votre question..."
+                                    :disabled="isLoadingAnswer"
+                                >
+                                <button 
+                                    class="btn btn-primary-custom" 
+                                    @click="askQuestion"
+                                    :disabled="isLoadingAnswer || !currentQuestion.trim()"
+                                    style="padding: 0.8rem 2rem;"
+                                >
+                                    <span><i class="bi bi-send-fill"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents List Section -->
+        <section id="documents" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-5" style="font-family: var(--font-display); font-size: 2.5rem;">
+                    Vos documents
+                </h2>
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div v-if="documents.length === 0" class="text-center text-secondary glass-card" style="padding: 4rem;">
+                            <i class="bi bi-file-earmark-text" style="font-size: 4rem; opacity: 0.3;"></i>
+                            <p class="mt-3">Aucun document uploadé pour le moment.</p>
+                        </div>
+                        
+                        <div v-else>
+                            <div v-for="doc in documents" :key="doc.id" class="document-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h4 class="document-title">{{ doc.title }}</h4>
+                                        <div class="d-flex gap-2 flex-wrap mb-2">
+                                            <span class="badge-custom" :class="'badge-' + doc.processing_status.toLowerCase()">
+                                                {{ doc.processing_status }}
+                                            </span>
+                                            <span class="badge-custom" style="background: rgba(168, 178, 209, 0.2); color: var(--text-secondary);">
+                                                {{ formatFileSize(doc.file_size) }}
+                                            </span>
+                                            <span v-if="doc.total_chunks > 0" class="badge-custom" style="background: rgba(0, 255, 157, 0.1); color: var(--accent);">
+                                                {{ doc.total_chunks }} chunks
+                                            </span>
+                                        </div>
+                                        <p class="text-secondary mb-0" style="font-size: 0.9rem;">
+                                            Uploadé le {{ formatDate(doc.created_at) }}
+                                        </p>
+                                    </div>
+                                    <button 
+                                        class="btn btn-sm btn-outline-danger"
+                                        @click="deleteDocument(doc.id)"
+                                        style="border-color: var(--danger); color: var(--danger);"
+                                    >
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-5 text-center text-secondary">
+            <div class="container">
+                <p style="font-family: var(--font-mono);">
+                    Smart-Notebook • Powered by Django + Vue.js + Ollama + OpenRouter
+                </p>
+                <p class="mb-0">
+                    <i class="bi bi-github"></i> Open Source • Made with ❤️
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    // Configuration API
+                    apiBaseUrl: 'http://localhost:8000/api',
+                    authToken: '', // À remplir avec votre token d'authentification
+                    
+                    // État de l'application
+                    documents: [],
+                    messages: [],
+                    stats: {
+                        total_documents: 0,
+                        total_chunks: 0,
+                        total_characters: 0
+                    },
+                    
+                    // Upload
+                    isDragging: false,
+                    uploadProgress: [],
+                    
+                    // Chat
+                    currentQuestion: '',
+                    isLoadingAnswer: false
+                };
+            },
+            
+            mounted() {
+                this.loadStats();
+                this.loadDocuments();
+                
+                // Polling pour rafraîchir les stats et documents
+                setInterval(() => {
+                    this.loadStats();
+                    this.loadDocuments();
+                }, 5000);
+            },
+            
+            methods: {
+                // Configuration Axios avec token
+                getAxiosConfig() {
+                    return {
+                        headers: {
+                            'Authorization': `Token ${this.authToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    };
+                },
+                
+                // Charger les statistiques
+                async loadStats() {
+                    try {
+                        const response = await axios.get(
+                            `${this.apiBaseUrl}/rag/stats/`,
+                            this.getAxiosConfig()
+                        );
+                        this.stats = response.data;
+                    } catch (error) {
+                        console.error('Erreur lors du chargement des stats:', error);
+                    }
+                },
+                
+                // Charger les documents
+                async loadDocuments() {
+                    try {
+                        const response = await axios.get(
+                            `${this.apiBaseUrl}/documents/`,
+                            this.getAxiosConfig()
+                        );
+                        this.documents = response.data.results || response.data;
+                    } catch (error) {
+                        console.error('Erreur lors du chargement des documents:', error);
+                    }
+                },
+                
+                // Upload de fichiers
+                triggerFileInput() {
+                    this.$refs.fileInput.click();
+                },
+                
+                handleFileSelect(event) {
+                    const files = Array.from(event.target.files);
+                    this.uploadFiles(files);
+                },
+                
+                handleFileDrop(event) {
+                    this.isDragging = false;
+                    const files = Array.from(event.dataTransfer.files);
+                    this.uploadFiles(files);
+                },
+                
+                async uploadFiles(files) {
+                    for (const file of files) {
+                        const progressItem = {
+                            name: file.name,
+                            progress: 0,
+                            status: 'Upload en cours...'
+                        };
+                        this.uploadProgress.push(progressItem);
+                        
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        formData.append('title', file.name.replace(/\.[^/.]+$/, ''));
+                        
+                        try {
+                            await axios.post(
+                                `${this.apiBaseUrl}/documents/upload/`,
+                                formData,
+                                {
+                                    headers: {
+                                        'Authorization': `Token ${this.authToken}`,
+                                        'Content-Type': 'multipart/form-data'
+                                    },
+                                    onUploadProgress: (progressEvent) => {
+                                        progressItem.progress = Math.round(
+                                            (progressEvent.loaded * 100) / progressEvent.total
+                                        );
+                                    }
+                                }
+                            );
+                            
+                            progressItem.status = 'Terminé';
+                            progressItem.progress = 100;
+                            
+                            // Rafraîchir la liste
+                            setTimeout(() => {
+                                this.loadDocuments();
+                                this.loadStats();
+                            }, 1000);
+                            
+                        } catch (error) {
+                            progressItem.status = 'Erreur';
+                            console.error('Erreur upload:', error);
+                        }
+                    }
+                    
+                    // Nettoyer la progress bar après 3 secondes
+                    setTimeout(() => {
+                        this.uploadProgress = [];
+                    }, 3000);
+                },
+                
+                // Poser une question
+                async askQuestion() {
+                    if (!this.currentQuestion.trim()) return;
+                    
+                    // Ajouter la question à l'historique
+                    this.messages.push({
+                        role: 'user',
+                        content: this.currentQuestion
+                    });
+                    
+                    const question = this.currentQuestion;
+                    this.currentQuestion = '';
+                    this.isLoadingAnswer = true;
+                    
+                    // Scroll automatique
+                    this.$nextTick(() => {
+                        this.scrollToBottom();
+                    });
+                    
+                    try {
+                        const response = await axios.post(
+                            `${this.apiBaseUrl}/rag/ask/`,
+                            {
+                                question: question,
+                                top_k: 5
+                            },
+                            this.getAxiosConfig()
+                        );
+                        
+                        // Ajouter la réponse
+                        this.messages.push({
+                            role: 'assistant',
+                            content: response.data.answer,
+                            sources: response.data.sources
+                        });
+                        
+                    } catch (error) {
+                        this.messages.push({
+                            role: 'assistant',
+                            content: '❌ Erreur lors de la génération de la réponse. Vérifiez votre configuration API.',
+                            sources: []
+                        });
+                        console.error('Erreur RAG:', error);
+                    } finally {
+                        this.isLoadingAnswer = false;
+                        this.$nextTick(() => {
+                            this.scrollToBottom();
+                        });
+                    }
+                },
+                
+                // Supprimer un document
+                async deleteDocument(docId) {
+                    if (!confirm('Êtes-vous sûr de vouloir supprimer ce document ?')) return;
+                    
+                    try {
+                        await axios.delete(
+                            `${this.apiBaseUrl}/documents/${docId}/`,
+                            this.getAxiosConfig()
+                        );
+                        this.loadDocuments();
+                        this.loadStats();
+                    } catch (error) {
+                        console.error('Erreur suppression:', error);
+                    }
+                },
+                
+                // Utilitaires
+                scrollToBottom() {
+                    if (this.$refs.chatContainer) {
+                        this.$refs.chatContainer.scrollTop = this.$refs.chatContainer.scrollHeight;
+                    }
+                },
+                
+                scrollToUpload() {
+                    document.getElementById('upload').scrollIntoView({ behavior: 'smooth' });
+                },
+                
+                formatFileSize(bytes) {
+                    if (bytes === 0) return '0 B';
+                    const k = 1024;
+                    const sizes = ['B', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+                },
+                
+                formatNumber(num) {
+                    if (num > 1000000) return (num / 1000000).toFixed(1) + 'M';
+                    if (num > 1000) return (num / 1000).toFixed(1) + 'K';
+                    return num;
+                },
+                
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('fr-FR', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                }
+            }
+        }).mount('#app');
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
