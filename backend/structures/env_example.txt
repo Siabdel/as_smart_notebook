@@ -1,0 +1,62 @@
+# ========================================
+# Smart-Notebook - Variables d'environnement
+# ========================================
+# Copiez ce fichier en .env et remplissez vos vraies valeurs
+
+# ========================================
+# DJANGO
+# ========================================
+SECRET_KEY=your-secret-key-here-generate-with-python-secrets
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# ========================================
+# BASE DE DONNÉES POSTGRESQL
+# ========================================
+DB_NAME=smartnotebook
+DB_USER=smartnotebook_user
+DB_PASSWORD=votre_mot_de_passe_securise
+DB_HOST=localhost
+DB_PORT=5432
+
+# ========================================
+# REDIS (Celery Broker)
+# ========================================
+REDIS_URL=redis://localhost:6379/0
+
+# ========================================
+# OLLAMA (Local - Embeddings)
+# ========================================
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_EMBEDDING_MODEL=nomic-embed-text
+
+# ========================================
+# OPENROUTER (Cloud - LLM)
+# ========================================
+# Obtenez votre clé sur: https://openrouter.ai/keys
+OPENROUTER_API_KEY=sk-or-v1-your-key-here
+OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
+OPENROUTER_DEFAULT_MODEL=anthropic/claude-3.5-sonnet
+
+# Modèles alternatifs disponibles:
+# - anthropic/claude-3.5-sonnet (recommandé, précis)
+# - deepseek/deepseek-chat (économique)
+# - meta-llama/llama-3.1-70b-instruct
+# - google/gemini-pro-1.5
+
+# ========================================
+# CONFIGURATION RAG
+# ========================================
+CHUNK_SIZE=512              # Taille des chunks en caractères
+CHUNK_OVERLAP=50            # Chevauchement entre chunks
+TOP_K_RESULTS=5             # Nombre de chunks à récupérer
+
+# ========================================
+# STOCKAGE MÉDIA
+# ========================================
+MEDIA_ROOT=/home/votre-user/smart-notebook/backend/media
+
+# ========================================
+# ENVIRONNEMENT
+# ========================================
+ENVIRONMENT=development     # development | production

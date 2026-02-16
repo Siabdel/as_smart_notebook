@@ -1,0 +1,51 @@
+# ========================================
+# Smart-Notebook - Requirements Python
+# ========================================
+
+# Framework Django
+Django==5.0.1
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+python-dotenv==1.0.0
+
+# Base de données vectorielle
+psycopg2-binary==2.9.9
+pgvector==0.2.4
+
+# Traitement de tâches async
+celery==5.3.4
+redis==5.0.1
+django-celery-results==2.5.1
+
+# IA et LLM
+openai==1.10.0              # Pour OpenRouter (compatible API OpenAI)
+httpx==0.26.0               # Client HTTP pour Ollama
+numpy==1.26.3
+
+# Traitement de documents
+pypdf==4.0.1                # Extraction texte PDF
+pytesseract==0.3.10         # OCR (nécessite tesseract-ocr système)
+Pillow==10.2.0              # Traitement d'images
+python-magic==0.4.27        # Détection type MIME
+
+# Text-to-Speech
+edge-tts==6.1.10
+
+# Utilitaires
+pydantic==2.5.3             # Validation de données
+pydantic-settings==2.1.0
+
+# Serveur WSGI pour production
+gunicorn==21.2.0
+
+# ========================================
+# Dépendances de développement (optionnel)
+# ========================================
+# Décommentez si vous en avez besoin
+
+# pytest==7.4.4
+# pytest-django==4.7.0
+# black==24.1.1              # Formatage de code
+# flake8==7.0.0              # Linting
+# ipython==8.20.0            # Shell interactif amélioré
+# django-debug-toolbar==4.2.0
