@@ -1356,3 +1356,15 @@ python create_token.py
 ------
 
 **Le script `create_token.py` fait tout le travail pour vous ! Téléchargez-le ci-dessus ! 🚀**
+
+----
+
+### GIT depository
+
+echo "# as_smart__notebook" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:Siabdel/as_smart_notebook.git
+git push -u origin main
